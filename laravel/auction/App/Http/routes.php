@@ -1,0 +1,69 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the controller to call when that URI is requested.
+|
+*/
+
+//Route::controller('users', 'UserController');
+Route::get('/', 'UserController@getIndex');
+/*Route::get('user/register', 'UserController@register');
+Route::get('user/index', 'UserController@index');*/
+//Route::post('auth/create', 'Auth\AuthController@postRegister');
+// Authentication routes...
+Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::get('auth/logout', 'Auth\AuthController@getLogout');
+
+// Registration routes...
+Route::get('auth/register', 'Auth\AuthController@getRegister');
+Route::post('auth/register', 'Auth\AuthController@postRegister');
+
+//Route::controller('user', 'UserController');
+//Route::controller('promise', ['middleware' => 'auth', 'uses' => 'PromiseController']);
+
+Route::get('home','UserController@getIndex');
+
+Route::group(['middleware' => ['auth']], function(){
+    Route::get('/promise/index', 'PromiseController@getIndex');
+    Route::get('/promise/validation', 'PromiseController@validation');
+    Route::get('/promise/request', 'PromiseController@pageRequest');
+    Route::get('/promise/buy', 'PromiseController@pageBuy');
+    Route::get('/promise/profile/{id}', 'PromiseController@pageProfile');
+    Route::get('/promise/buypromise', 'PromiseController@pageBuypromise');
+
+    Route::get('/account/broughtpromise', 'AccountController@pageBroughtpromise');
+    Route::get('/account/otherpromise', 'AccountController@pageOtherpromise');
+    Route::get('/account/sellpromise', 'AccountController@pageSellpromise');
+    Route::get('/account/yourpromise', 'AccountController@pageYourpromise');
+
+    Route::post('/promise/add', 'PromiseController@add');
+    Route::post('/promise/addrequest', 'PromiseController@addRequest');
+    Route::post('/promise/getdata', 'PromiseController@getData');
+    Route::post('/promise/buy', 'PromiseController@buy');
+    Route::post('/promise/check', 'PromiseController@check');
+    Route::post('/promise/getpromisebycategory', 'PromiseController@getPromiseByCategory');
+
+    Route::get('/promise/sell', 'PromiseController@pageSell');
+    Route::get('/home','UserController@getIndex');
+
+    Route::get('/user/getfile','UserController@uploadedFile');
+});
+
+Route::group(['middleware' => ['auth']], function() {
+    Route::get('/admin', 'AdminController@index');
+    Route::get('/admin/pagepromise', 'AdminController@pagePromise');
+
+    Route::get('/admin/users', 'AdminController@users');
+    Route::get('/admin/promise', 'AdminController@promise');
+});
+
+/*Route::get('/', function () {
+    return view('welcome');
+});*/
