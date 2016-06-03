@@ -118,10 +118,6 @@ class Router implements RegistrarContract
         $this->events = $events;
         $this->routes = new RouteCollection;
         $this->container = $container ?: new Container;
-
-        $this->bind('_missing', function ($v) {
-            return explode('/', $v);
-        });
     }
 
     /**
@@ -228,6 +224,8 @@ class Router implements RegistrarContract
      *
      * @param  array  $controllers
      * @return void
+     *
+     * @deprecated since version 5.1.
      */
     public function controllers(array $controllers)
     {
@@ -243,6 +241,8 @@ class Router implements RegistrarContract
      * @param  string  $controller
      * @param  array   $names
      * @return void
+     *
+     * @deprecated since version 5.1.
      */
     public function controller($uri, $controller, $names = [])
     {
@@ -278,6 +278,8 @@ class Router implements RegistrarContract
      * @param  string  $method
      * @param  array   $names
      * @return void
+     *
+     * @deprecated since version 5.1.
      */
     protected function registerInspected($route, $controller, $method, &$names)
     {
@@ -297,6 +299,8 @@ class Router implements RegistrarContract
      * @param  string  $controller
      * @param  string  $uri
      * @return void
+     *
+     * @deprecated since version 5.1.
      */
     protected function addFallthroughRoute($controller, $uri)
     {
@@ -408,7 +412,7 @@ class Router implements RegistrarContract
             $new['as'] = $old['as'].(isset($new['as']) ? $new['as'] : '');
         }
 
-        return array_merge_recursive(Arr::except($old, ['namespace', 'prefix', 'where', 'as']), $new);
+        return array_merge_recursive(array_except($old, ['namespace', 'prefix', 'where', 'as']), $new);
     }
 
     /**

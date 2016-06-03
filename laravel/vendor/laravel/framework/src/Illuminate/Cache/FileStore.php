@@ -209,13 +209,11 @@ class FileStore implements Store
      */
     protected function expiration($minutes)
     {
-        $time = time() + ($minutes * 60);
-
-        if ($minutes === 0 || $time > 9999999999) {
+        if ($minutes === 0) {
             return 9999999999;
         }
 
-        return $time;
+        return time() + ($minutes * 60);
     }
 
     /**

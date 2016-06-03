@@ -142,10 +142,6 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function resolved($abstract)
     {
-        if ($this->isAlias($abstract)) {
-            $abstract = $this->getAlias($abstract);
-        }
-
         return isset($this->resolved[$abstract]) || isset($this->instances[$abstract]);
     }
 
@@ -1149,7 +1145,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function offsetExists($key)
     {
-        return $this->bound($key);
+        return isset($this->bindings[$key]);
     }
 
     /**

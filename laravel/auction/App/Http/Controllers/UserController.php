@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use app\model\DB;
 use App\model\DB\File;
 use App\User;
+use Session; //load session class
 
 class UserController extends Controller {
 
@@ -25,7 +26,7 @@ class UserController extends Controller {
 
 		//var_dump(User::find(4)->toArray());
 
-		return view('user.index');
+		return view('user.index'); 
 	}
 
 	public function getRegister(){

@@ -18,7 +18,6 @@ use Psy\CodeCleaner\AbstractClassPass;
 use Psy\CodeCleaner\AssignThisVariablePass;
 use Psy\CodeCleaner\CalledClassPass;
 use Psy\CodeCleaner\CallTimePassByReferencePass;
-use Psy\CodeCleaner\ExitPass;
 use Psy\CodeCleaner\FunctionReturnInWriteContextPass;
 use Psy\CodeCleaner\ImplicitReturnPass;
 use Psy\CodeCleaner\InstanceOfPass;
@@ -27,7 +26,6 @@ use Psy\CodeCleaner\LegacyEmptyPass;
 use Psy\CodeCleaner\MagicConstantsPass;
 use Psy\CodeCleaner\NamespacePass;
 use Psy\CodeCleaner\StaticConstructorPass;
-use Psy\CodeCleaner\StrictTypesPass;
 use Psy\CodeCleaner\UseStatementPass;
 use Psy\CodeCleaner\ValidClassNamePass;
 use Psy\CodeCleaner\ValidConstantPass;
@@ -87,13 +85,11 @@ class CodeCleaner
             new ImplicitReturnPass(),
             new UseStatementPass(),      // must run before namespace and validation passes
             new NamespacePass($this),    // must run after the implicit return pass
-            new StrictTypesPass(),
             new StaticConstructorPass(),
             new ValidFunctionNamePass(),
             new ValidClassNamePass(),
             new ValidConstantPass(),
             new MagicConstantsPass(),
-            new ExitPass(),
         );
     }
 

@@ -12,12 +12,12 @@
 
 		<div>
 			Email
-			<input type="email" name="email" value="{{ old('email') }}">
+			<input type="text" name="r_email" value="">
 		</div>
 
 		<div>
 			Password
-			<input type="password" name="password" id="password">
+			<input type="password" name="r_password" id="password">
 		</div>
 
 		<div>

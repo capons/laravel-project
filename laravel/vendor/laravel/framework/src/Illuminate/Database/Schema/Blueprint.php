@@ -934,7 +934,7 @@ class Blueprint
      * @param  array   $parameters
      * @return \Illuminate\Support\Fluent
      */
-    public function addColumn($type, $name, array $parameters = [])
+    protected function addColumn($type, $name, array $parameters = [])
     {
         $attributes = array_merge(compact('type', 'name'), $parameters);
 
@@ -1034,7 +1034,7 @@ class Blueprint
     public function getChangedColumns()
     {
         return array_filter($this->columns, function ($column) {
-            return (bool) $column->change;
+            return ! ! $column->change;
         });
     }
 }

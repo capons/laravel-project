@@ -33,7 +33,6 @@ class ImplicitReturnPassTest extends CodeCleanerTestCase
         return array(
             array('4',     'return 4;'),
             array('foo()', 'return foo();'),
-            array('exit()', 'die;'),
         );
     }
 }

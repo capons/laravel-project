@@ -44,7 +44,7 @@ class MandrillTransport extends Transport
         $data = [
             'key' => $this->key,
             'to' => $this->getToAddresses($message),
-            'raw_message' => $message->toString(),
+            'raw_message' => (string) $message,
             'async' => false,
         ];
 

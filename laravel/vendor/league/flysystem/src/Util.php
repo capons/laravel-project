@@ -33,7 +33,11 @@ class Util
      */
     public static function normalizeDirname($dirname)
     {
-        return $dirname === '.' ? '' : $dirname;
+        if ($dirname === '.') {
+            return '';
+        }
+
+        return $dirname;
     }
 
     /**
@@ -61,7 +65,7 @@ class Util
         $result = [];
 
         foreach ($map as $from => $to) {
-            if ( ! isset($object[$from])) {
+            if (! isset($object[$from])) {
                 continue;
             }
 
@@ -108,7 +112,7 @@ class Util
     public static function normalizeRelativePath($path)
     {
         // Path remove self referring paths ("/./").
-        $path = preg_replace('#/\.(?=/)|^\./|(/|^)\./?$#', '', $path);
+        $path = preg_replace('#/\.(?=/)|^\./|/\./?$#', '', $path);
 
         // Regex for resolving relative paths
         $regex = '#/*[^/\.]+/\.\.#Uu';
@@ -149,7 +153,7 @@ class Util
      * Guess MIME Type based on the path of the file and it's content.
      *
      * @param string $path
-     * @param string|resource $content
+     * @param string $content
      *
      * @return string|null MIME Type or NULL if no extension detected
      */
@@ -157,11 +161,15 @@ class Util
     {
         $mimeType = MimeType::detectByContent($content);
 
-        if ( ! (empty($mimeType) || in_array($mimeType, ['application/x-empty', 'text/plain', 'text/x-asm']))) {
-            return $mimeType;
+        if (empty($mimeType) || $mimeType === 'text/plain') {
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+            if ($extension) {
+                $mimeType = MimeType::detectByFileExtension($extension) ?: 'text/plain';
+            }
         }
 
-        return MimeType::detectByFilename($path);
+        return $mimeType;
     }
 
     /**
@@ -273,7 +281,7 @@ class Util
 
         $parent = $object['dirname'];
 
-        while ( ! empty($parent) && ! in_array($parent, $directories)) {
+        while (! empty($parent) && ! in_array($parent, $directories)) {
             $directories[] = $parent;
             $parent = static::dirname($parent);
         }

@@ -93,7 +93,7 @@ class IronQueue extends Queue implements QueueContract
      * @param  int     $delay
      * @return mixed
      */
-    public function recreate($payload, $queue, $delay)
+    public function recreate($payload, $queue = null, $delay)
     {
         $options = ['delay' => $this->getSeconds($delay)];
 

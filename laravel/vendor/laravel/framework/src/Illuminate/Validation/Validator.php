@@ -7,7 +7,6 @@ use DateTime;
 use Countable;
 use Exception;
 use DateTimeZone;
-use Carbon\Carbon;
 use RuntimeException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -1236,15 +1235,9 @@ class Validator implements ValidatorContract
      */
     protected function validateActiveUrl($attribute, $value)
     {
-        if (! is_string($value)) {
-            return false;
-        }
+        $url = str_replace(['http://', 'https://', 'ftp://'], '', strtolower($value));
 
-        if ($url = parse_url($value, PHP_URL_HOST)) {
-            return count(dns_get_record($url, DNS_A | DNS_AAAA)) > 0;
-        }
-
-        return false;
+        return checkdnsrr($url, 'A');
     }
 
     /**
@@ -1384,7 +1377,7 @@ class Validator implements ValidatorContract
             return true;
         }
 
-        if ((! is_string($value) && ! is_numeric($value)) || strtotime($value) === false) {
+        if (strtotime($value) === false) {
             return false;
         }
 
@@ -1405,10 +1398,6 @@ class Validator implements ValidatorContract
     {
         $this->requireParameterCount(1, $parameters, 'date_format');
 
-        if (! is_string($value) && ! is_numeric($value)) {
-            return false;
-        }
-
         $parsed = date_parse_from_format($parameters[0], $value);
 
         return $parsed['error_count'] === 0 && $parsed['warning_count'] === 0;
@@ -1425,10 +1414,6 @@ class Validator implements ValidatorContract
     protected function validateBefore($attribute, $value, $parameters)
     {
         $this->requireParameterCount(1, $parameters, 'before');
-
-        if (! is_string($value) && ! is_numeric($value) && ! $value instanceof Carbon) {
-            return false;
-        }
 
         if ($format = $this->getDateFormat($attribute)) {
             return $this->validateBeforeWithFormat($format, $value, $parameters);
@@ -1467,10 +1452,6 @@ class Validator implements ValidatorContract
     protected function validateAfter($attribute, $value, $parameters)
     {
         $this->requireParameterCount(1, $parameters, 'after');
-
-        if (! is_string($value) && ! is_numeric($value) && ! $value instanceof Carbon) {
-            return false;
-        }
 
         if ($format = $this->getDateFormat($attribute)) {
             return $this->validateAfterWithFormat($format, $value, $parameters);

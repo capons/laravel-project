@@ -64,7 +64,7 @@ trait InteractsWithPages
 
         $this->currentUri = $this->app->make('request')->fullUrl();
 
-        $this->crawler = new Crawler($this->response->getContent(), $this->currentUri);
+        $this->crawler = new Crawler($this->response->getContent(), $uri);
 
         return $this;
     }
@@ -203,21 +203,25 @@ trait InteractsWithPages
     /**
      * Assert that a given string is seen inside an element.
      *
-     * @param  string  $element
+     * @param  bool|string|null  $element
      * @param  string  $text
      * @param  bool  $negate
      * @return $this
      */
-    public function seeInElement($element, $text, $negate = false)
+    protected function seeInElement($element, $text, $negate = false)
     {
-        if ($negate) {
-            return $this->dontSeeInElement($element, $text);
-        }
+        $method = $negate ? 'assertNotRegExp' : 'assertRegExp';
 
-        $this->assertTrue(
-            $this->hasInElement($element, $text),
-            "Element [$element] should contain the expected text [{$text}]"
-        );
+        $rawPattern = preg_quote($text, '/');
+
+        $escapedPattern = preg_quote(e($text), '/');
+
+        $content = $this->crawler->filter($element)->html();
+
+        $pattern = $rawPattern == $escapedPattern
+                ? $rawPattern : "({$rawPattern}|{$escapedPattern})";
+
+        $this->$method("/$pattern/i", $content);
 
         return $this;
     }
@@ -225,47 +229,13 @@ trait InteractsWithPages
     /**
      * Assert that a given string is not seen inside an element.
      *
-     * @param  string  $element
      * @param  string  $text
+     * @param  string|null  $element
      * @return $this
      */
-    public function dontSeeInElement($element, $text)
+    protected function dontSeeInElement($element, $text)
     {
-        $this->assertFalse(
-            $this->hasInElement($element, $text),
-            "Element [$element] should not contain the expected text [{$text}]"
-        );
-
-        return $this;
-    }
-
-    /**
-     * Check if the page contains text within the given element.
-     *
-     * @param  string  $element
-     * @param  string  $text
-     * @return bool
-     */
-    protected function hasInElement($element, $text)
-    {
-        $elements = $this->crawler->filter($element);
-
-        $rawPattern = preg_quote($text, '/');
-
-        $escapedPattern = preg_quote(e($text), '/');
-
-        $pattern = $rawPattern == $escapedPattern
-            ? $rawPattern : "({$rawPattern}|{$escapedPattern})";
-
-        foreach ($elements as $element) {
-            $element = new Crawler($element);
-
-            if (preg_match("/$pattern/i", $element->html())) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->seeInElement($element, $text, true);
     }
 
     /**
@@ -533,6 +503,8 @@ trait InteractsWithPages
                 return $option->getAttribute('value');
             }
         }
+
+        return;
     }
 
     /**
@@ -554,6 +526,8 @@ trait InteractsWithPages
                 return $radio->getAttribute('value');
             }
         }
+
+        return;
     }
 
     /**

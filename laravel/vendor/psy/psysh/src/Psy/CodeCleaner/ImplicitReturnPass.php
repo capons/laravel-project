@@ -12,7 +12,6 @@
 namespace Psy\CodeCleaner;
 
 use PhpParser\Node\Expr;
-use PhpParser\Node\Expr\Exit_;
 use PhpParser\Node\Stmt\Return_ as ReturnStmt;
 
 /**
@@ -27,7 +26,7 @@ class ImplicitReturnPass extends CodeCleanerPass
     {
         $last = end($nodes);
 
-        if ($last instanceof Expr && !($last instanceof Exit_)) {
+        if ($last instanceof Expr) {
             $nodes[count($nodes) - 1] = new ReturnStmt($last, array(
                 'startLine' => $last->getLine(),
                 'endLine'   => $last->getLine(),

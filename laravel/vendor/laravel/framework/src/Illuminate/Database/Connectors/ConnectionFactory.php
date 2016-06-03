@@ -145,7 +145,7 @@ class ConnectionFactory
      */
     protected function mergeReadWriteConfig(array $config, array $merge)
     {
-        return Arr::except(array_merge($config, $merge), ['read', 'write']);
+        return array_except(array_merge($config, $merge), ['read', 'write']);
     }
 
     /**

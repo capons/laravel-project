@@ -1,16 +1,8 @@
 <?php
 
 use Illuminate\Support\Str;
-use Illuminate\View\Expression;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Routing\UrlGenerator;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Contracts\Cookie\Factory as CookieFactory;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 
 if (! function_exists('abort')) {
     /**
@@ -98,7 +90,7 @@ if (! function_exists('auth')) {
      */
     function auth()
     {
-        return app(Guard::class);
+        return app('Illuminate\Contracts\Auth\Guard');
     }
 }
 
@@ -195,7 +187,7 @@ if (! function_exists('cookie')) {
      */
     function cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
-        $cookie = app(CookieFactory::class);
+        $cookie = app('Illuminate\Contracts\Cookie\Factory');
 
         if (is_null($name)) {
             return $cookie;
@@ -213,7 +205,7 @@ if (! function_exists('csrf_field')) {
      */
     function csrf_field()
     {
-        return new Expression('<input type="hidden" name="_token" value="'.csrf_token().'">');
+        return new Illuminate\View\Expression('<input type="hidden" name="_token" value="'.csrf_token().'">');
     }
 }
 
@@ -261,19 +253,6 @@ if (! function_exists('delete')) {
     function delete($uri, $action)
     {
         return app('router')->delete($uri, $action);
-    }
-}
-
-if (! function_exists('dispatch')) {
-    /**
-     * Dispatch a job to its appropriate handler.
-     *
-     * @param  mixed  $job
-     * @return mixed
-     */
-    function dispatch($job)
-    {
-        return app(Dispatcher::class)->dispatch($job);
     }
 }
 
@@ -336,7 +315,7 @@ if (! function_exists('env')) {
                 return;
         }
 
-        if (strlen($value) > 1 && Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
+        if (Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
             return substr($value, 1, -1);
         }
 
@@ -368,7 +347,7 @@ if (! function_exists('factory')) {
      */
     function factory()
     {
-        $factory = app(EloquentFactory::class);
+        $factory = app('Illuminate\Database\Eloquent\Factory');
 
         $arguments = func_get_args();
 
@@ -437,7 +416,7 @@ if (! function_exists('method_field')) {
      */
     function method_field($method)
     {
-        return new Expression('<input type="hidden" name="_method" value="'.$method.'">');
+        return new Illuminate\View\Expression('<input type="hidden" name="_method" value="'.$method.'">');
     }
 }
 
@@ -589,7 +568,7 @@ if (! function_exists('response')) {
      */
     function response($content = '', $status = 200, array $headers = [])
     {
-        $factory = app(ResponseFactory::class);
+        $factory = app('Illuminate\Contracts\Routing\ResponseFactory');
 
         if (func_num_args() === 0) {
             return $factory;
@@ -727,7 +706,7 @@ if (! function_exists('url')) {
      */
     function url($path = null, $parameters = [], $secure = null)
     {
-        return app(UrlGenerator::class)->to($path, $parameters, $secure);
+        return app('Illuminate\Contracts\Routing\UrlGenerator')->to($path, $parameters, $secure);
     }
 }
 
@@ -742,7 +721,7 @@ if (! function_exists('view')) {
      */
     function view($view = null, $data = [], $mergeData = [])
     {
-        $factory = app(ViewFactory::class);
+        $factory = app('Illuminate\Contracts\View\Factory');
 
         if (func_num_args() === 0) {
             return $factory;

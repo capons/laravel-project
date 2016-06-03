@@ -22,13 +22,13 @@ Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
-Route::get('auth/register', 'Auth\AuthController@getRegister');
-Route::post('auth/register', 'Auth\AuthController@postRegister');
+Route::get('auth/register', 'Auth\AuthController@getRegister'); //view auth/register
+Route::post('auth/register', 'Auth\AuthController@postRegister'); //receive data from registration form
 
 //Route::controller('user', 'UserController');
 //Route::controller('promise', ['middleware' => 'auth', 'uses' => 'PromiseController']);
 
-Route::get('home','UserController@getIndex');
+Route::get('home','UserController@getIndex'); //maby page for quest
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/promise/index', 'PromiseController@getIndex');

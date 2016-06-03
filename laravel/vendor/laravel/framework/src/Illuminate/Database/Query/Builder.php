@@ -7,6 +7,7 @@ use BadMethodCallException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Support\Arrayable;
@@ -764,12 +765,6 @@ class Builder
     {
         $type = $not ? 'NotIn' : 'In';
 
-        if ($values instanceof static) {
-            return $this->whereInExistingQuery(
-                $column, $values, $boolean, $not
-            );
-        }
-
         // If the value of the where in clause is actually a Closure, we will assume that
         // the developer is using a full sub-select for this "in" statement, and will
         // execute those Closures, then we can re-construct the entire sub-selects.
@@ -842,26 +837,6 @@ class Builder
         // provided callback with the query so the developer may set any of the query
         // conditions they want for the in clause, then we'll put it in this array.
         call_user_func($callback, $query = $this->newQuery());
-
-        $this->wheres[] = compact('type', 'column', 'query', 'boolean');
-
-        $this->addBinding($query->getBindings(), 'where');
-
-        return $this;
-    }
-
-    /**
-     * Add a external sub-select to the query.
-     *
-     * @param  string   $column
-     * @param  \Illuminate\Database\Query\Builder|static  $query
-     * @param  string   $boolean
-     * @param  bool     $not
-     * @return $this
-     */
-    protected function whereInExistingQuery($column, $query, $boolean, $not)
-    {
-        $type = $not ? 'NotInSub' : 'InSub';
 
         $this->wheres[] = compact('type', 'column', 'query', 'boolean');
 
@@ -1585,32 +1560,37 @@ class Builder
      * Get an array with the values of a given column.
      *
      * @param  string  $column
-     * @param  string|null  $key
+     * @param  string  $key
      * @return array
      */
     public function lists($column, $key = null)
     {
-        $results = $this->get(is_null($key) ? [$column] : [$column, $key]);
+        $columns = $this->getListSelect($column, $key);
 
-        // If the columns are qualified with a table or have an alias, we cannot use
-        // those directly in the "pluck" operations since the results from the DB
-        // are only keyed by the column itself. We'll strip the table out here.
-        return Arr::pluck(
-            $results,
-            $this->stripTableForPluck($column),
-            $this->stripTableForPluck($key)
-        );
+        $results = new Collection($this->get($columns));
+
+        return $results->pluck($columns[0], Arr::get($columns, 1))->all();
     }
 
     /**
-     * Strip off the table name or alias from a column identifier.
+     * Get the columns that should be used in a list array.
      *
      * @param  string  $column
-     * @return string|null
+     * @param  string  $key
+     * @return array
      */
-    protected function stripTableForPluck($column)
+    protected function getListSelect($column, $key)
     {
-        return is_null($column) ? $column : last(preg_split('~\.| ~', $column));
+        $select = is_null($key) ? [$column] : [$column, $key];
+
+        // If the selected column contains a "dot", we will remove it so that the list
+        // operation can run normally. Specifying the table is not needed, since we
+        // really want the names of the columns as it is in this resulting array.
+        return array_map(function ($column) {
+            $dot = strpos($column, '.');
+
+            return $dot === false ? $column : substr($column, $dot + 1);
+        }, $select);
     }
 
     /**
@@ -1628,7 +1608,7 @@ class Builder
     /**
      * Determine if any rows exist for the current query.
      *
-     * @return bool
+     * @return bool|null
      */
     public function exists()
     {
@@ -1641,8 +1621,6 @@ class Builder
 
             return (bool) $results['exists'];
         }
-
-        return false;
     }
 
     /**

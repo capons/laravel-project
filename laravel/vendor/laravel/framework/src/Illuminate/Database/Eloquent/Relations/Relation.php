@@ -336,14 +336,4 @@ abstract class Relation
 
         return $result;
     }
-
-    /**
-     * Force a clone of the underlying query builder when cloning.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->query = clone $this->query;
-    }
 }

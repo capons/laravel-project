@@ -40,6 +40,7 @@ class ProgressBar
     private $startTime;
     private $stepWidth;
     private $percent = 0.0;
+    private $lastMessagesLength = 0;
     private $formatLineCount;
     private $messages;
     private $overwrite = true;
@@ -66,8 +67,10 @@ class ProgressBar
             // disable overwrite when output does not support ANSI codes.
             $this->overwrite = false;
 
-            // set a reasonable redraw frequency so output isn't flooded
-            $this->setRedrawFrequency($max / 10);
+            if ($this->max > 10) {
+                // set a reasonable redraw frequency so output isn't flooded
+                $this->setRedrawFrequency($max / 10);
+            }
         }
 
         $this->startTime = time();
@@ -313,11 +316,11 @@ class ProgressBar
     /**
      * Sets the redraw frequency.
      *
-     * @param int|float $freq The frequency in steps
+     * @param int $freq The frequency in steps
      */
     public function setRedrawFrequency($freq)
     {
-        $this->redrawFreq = max((int) $freq, 1);
+        $this->redrawFreq = (int) $freq;
     }
 
     /**
@@ -471,7 +474,7 @@ class ProgressBar
             $this->setRealFormat($this->internalFormat ?: $this->determineBestFormat());
         }
 
-        $this->overwrite('');
+        $this->overwrite(str_repeat("\n", $this->formatLineCount));
     }
 
     /**
@@ -511,22 +514,37 @@ class ProgressBar
      */
     private function overwrite($message)
     {
-        if ($this->overwrite) {
-            // Move the cursor to the beginning of the line
-            $this->output->write("\x0D");
+        $lines = explode("\n", $message);
 
-            // Erase the line
-            $this->output->write("\x1B[2K");
-
-            // Erase previous lines
-            if ($this->formatLineCount > 0) {
-                $this->output->write(str_repeat("\x1B[1A\x1B[2K", $this->formatLineCount));
+        // append whitespace to match the line's length
+        if (null !== $this->lastMessagesLength) {
+            foreach ($lines as $i => $line) {
+                if ($this->lastMessagesLength > Helper::strlenWithoutDecoration($this->output->getFormatter(), $line)) {
+                    $lines[$i] = str_pad($line, $this->lastMessagesLength, "\x20", STR_PAD_RIGHT);
+                }
             }
+        }
+
+        if ($this->overwrite) {
+            // move back to the beginning of the progress bar before redrawing it
+            $this->output->write("\x0D");
         } elseif ($this->step > 0) {
+            // move to new line
             $this->output->writeln('');
         }
 
-        $this->output->write($message);
+        if ($this->formatLineCount) {
+            $this->output->write(sprintf("\033[%dA", $this->formatLineCount));
+        }
+        $this->output->write(implode("\n", $lines));
+
+        $this->lastMessagesLength = 0;
+        foreach ($lines as $line) {
+            $len = Helper::strlenWithoutDecoration($this->output->getFormatter(), $line);
+            if ($len > $this->lastMessagesLength) {
+                $this->lastMessagesLength = $len;
+            }
+        }
     }
 
     private function determineBestFormat()
