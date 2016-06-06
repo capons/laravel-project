@@ -22,7 +22,7 @@
 		$(document).ready(function() {
 
 			$('#users').DataTable( {
-				"ajax": "/admin/promise",
+				"ajax": "<?php echo Config::get('app.url'); ?>/admin/promise",
 				"columns": [
 					{ "data": "title" },
 					{ "data": "price" }

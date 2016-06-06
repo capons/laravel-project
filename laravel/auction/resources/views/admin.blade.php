@@ -20,6 +20,15 @@
 			}
 		});
 	</script>
+
+	<!--DataTable cdn -->
+	<script src="{!! asset('/AdminLTE/plugins/datatables/jquery.dataTables.min.js') !!}" type="text/javascript"></script>
+	<link href="{!! asset('/AdminLTE/plugins/datatables/jquery.dataTables.min.css') !!}" rel="stylesheet" type="text/css">
+	<script src="https://cdn.datatables.net/buttons/1.2.0/js/dataTables.buttons.min.js" type="text/javascript"></script>
+	<script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt-1.10.12/jqc-1.11.3,dt-1.10.12,b-1.2.0,se-1.2.0/datatables.min.css"/>
+	<script type="text/javascript" src="https://cdn.datatables.net/r/dt-1.10.12/jqc-1.11.3,dt-1.10.12,b-1.2.0,se-1.2.0/datatables.min.js"></script>
+
 </head>
 <body class="skin-blue sidebar-mini">
 <header class="main-header">

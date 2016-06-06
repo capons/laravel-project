@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="<?php echo base_path(); ?>/public/js/WCL/main.js"></script>
 	<script type="text/javascript" src="<?php echo base_path(); ?>/public/js/WCL/interface.js"></script>
 	<script type="text/javascript" src="<?php echo base_path(); ?>/public/js/system.js"></script>
+
 </head>
 <body>
 @section('sidebar')

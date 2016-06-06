@@ -66,11 +66,6 @@ class AuthController extends Controller
 	 */
 	public function postLogin(Request $request) //login via email + pass or name + pass
 	{
-
-		//$this->validate($request, [
-		//	$this->loginUsername() => 'required', 'password' => 'required',
-		//]);
-
 		// If the class is using the ThrottlesLogins trait, we can automatically throttle
 		// the login attempts for this application. We'll key this by the username and
 		// the IP address of the client making these requests into this application.
@@ -83,21 +78,21 @@ class AuthController extends Controller
 
 		//$credentials = $this->getCredentials($request);
 		$userdata_email = array( //login via email
-			'email'     => Input::get('r_email'),
-			'password'  => Input::get('r_password')
+			'email'     => Input::get('r_email'),  //email -> database row name
+			'password'  => Input::get('r_password')//password -> database row name
 		);
 		$userdata_name = array( //login via name
 			'f_name'    => Input::get('r_email'),
 			'password'  => Input::get('r_password')
 		);
-		$rules = array(                 //validation rules
-			'r_email'    => 'required', // make sure the email is an actual email
-			'r_password' => 'required' // password can only be alphanumeric and has to be greater than 3 characters
-		);
 		$messages = [ //validation message
 			'required' => 'The :attribute field is required.',
 		];
-		$validator = Validator::make(Input::all(), $rules,$messages);
+		//$validator = Validator::make(Input::all(), $rules,$messages);
+		$validator = Validator::make($request->all(), [
+			'r_email' => 'required',
+			'r_password' => 'required', $messages
+		]);
 		if ($validator->fails()) { //if true display error
 			return redirect('auth/login')
 				->withInput()
@@ -110,6 +105,7 @@ class AuthController extends Controller
 					Auth::user()->f_name,
 					Auth::user()->l_name,
 					Auth::user()->email,
+					Auth::user()->access
 				);
 				if (Session::has('user_auth_mess')) { //if session isset redirect if no push data to session
 					return $this->handleUserWasAuthenticated($request, $throttles);
@@ -124,6 +120,7 @@ class AuthController extends Controller
 					Auth::user()->f_name,
 					Auth::user()->l_name,
 					Auth::user()->email,
+					Auth::user()->access
 				);
 				if (Session::has('user_auth_mess')) { //if session isset redirect if no push data to session
 					return $this->handleUserWasAuthenticated($request, $throttles);
@@ -137,13 +134,17 @@ class AuthController extends Controller
 		// If the login attempt was unsuccessful we will increment the number of attempts
 		// to login and redirect the user back to the login form. Of course, when this
 		// user surpasses their maximum number of attempts they will get locked out.
+
 		if ($throttles) {
 			$this->incrementLoginAttempts($request);
 		}
-		return redirect($this->loginPath())
+
+		//return redirect($this->loginPath())
+		return redirect('auth/login') //redirect to with message
 			->withInput($request->only($this->loginUsername(), 'remember'))
 			->withErrors([
-				$this->loginUsername() => $this->getFailedLoginMessage(),
+				//$this->loginUsername() => $this->getFailedLoginMessage(),
+				'Invalid username or password',
 			]);
 
 	}

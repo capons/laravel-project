@@ -35,7 +35,7 @@ return [
     |
     */
 
-    'url' => 'http://auction.loc',
+    'url' => 'http://localhost/bogdan/LARAVEL-PROJECT/laravel/auction/public',
 
     /*
     |--------------------------------------------------------------------------
