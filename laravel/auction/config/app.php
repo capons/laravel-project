@@ -145,6 +145,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Zofe\Rapyd\RapydServiceProvider::class, //add gridview library
 
         /*
          * Application Service Providers...

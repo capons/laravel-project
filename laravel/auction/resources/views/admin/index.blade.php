@@ -6,61 +6,60 @@
 @stop
 
 @section('content')
-	<?php
-	$path = base_path('App/function/dataTable/php/DataTables.php');
-	include($path);
-
-	?>
-
-	<table data-order='[[ 1, "asc" ]]' data-page-length='10' id="users" class="display" cellspacing="0" width="100%">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>email</th>
-				<th>Location</th>
-			</tr>
-		</thead>
-		<tfoot>
-		</tfoot>
-	</table>
-
-	@if (count($users) > 0)  <!-- if $users have data -->
-		<script type="text/javascript">
-				$(document).ready(function() { //display all users data by DataTable library
-					$('#users').DataTable( {
-						select: true,
-						ajax : "<?php echo Config::get('app.url'); ?>/admin/users",
-						"columns": [
-							{ "data": "f_name" },
-							{ "data": "email" }
-							//{ "data": "location" }
-						],
-						"buttons": [
-							{
-								text: 'Select All',
-								className: 'btn-success',
-								action: function ( e, dt, node, config ) {
-									alert( 'Button activated');
-								}
-							},
-							{
-								text: 'Deselect All',
-								className: 'btn-success',
-								action: function ( e, dt, node, config ) {
-									alert( 'Button activated');
-								}
-							},
-							{
-								text: 'Refresh',
-								className: 'btn-success',
-								action: function ( e, dt, node, config ) {
-									alert( 'Button activated');
-								}
-							}
-						]
-						//data:data
-					} );
-			});
-		</script>
+		<!-- Validation error-->
+	@if (count($errors) > 0)
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
 	@endif
+		<!--  ./Validation error-->
+		<!--User information -->
+		@if(Session::has('user-info'))
+			<div class="alert-box success">
+				<h2>{{ Session::get('user-info') }}</h2>
+			</div>
+			@endif
+		<!-- ./User information-->
+	<!--Users GridView -->
+	<?php
+	if(isset($grid)){ //display gridview with users data
+	?>
+	{!! $filter !!}
+	{!! $grid !!}
+	<?php } ?>
+	<!--End users GridView -->
+<?php
+if(isset($_GET['modify'])){ ?>
+
+	@if (count($user_view) > 0)  <!-- if $tasks have data -->
+		<div class="row">
+			<div class="col-xs-12">
+				<div style="float: none;margin: 0 auto" class="col-xs-6">
+					@foreach ($user_view as $user) <!-- loop array to display data-->
+						<form method="post" action="<?php echo Config::get('app.url'); ?>/admin/users">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<input type="hidden" name="m-id" value="{{$user->id}}">
+							<div class="form-group">
+								<label>Name</label>
+								<input type="name" name="m-name" class="form-control" value="{{$user->f_name}}">
+							</div>
+							<div class="form-group">
+								<label>Email</label>
+								<input type="email" name="m-email" class="form-control" value="{{$user->email}}">
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					@endforeach
+				</div>
+			</div>
+		</div>
+	@endif
+<?php
+}
+?>
+
 @stop

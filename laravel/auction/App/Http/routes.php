@@ -57,11 +57,16 @@ Route::group(['middleware' => ['auth']], function(){
 });
 
 Route::group(['middleware' => ['auth']], function() {
-    Route::get('/admin', 'AdminController@index');
+    //Route::get('/admin', 'AdminController@users'); //old route
+    /*Users routes*/
+    Route::get('/admin/users','AdminUsersController@users'); //i add
+    Route::post('/admin/users','AdminUsersController@modify'); //i add
+    Route::get('/admin/users/new','AdminUsersController@newUser');
+    /* ./Users routes*/
     Route::get('/admin/pagepromise', 'AdminController@pagePromise');
 
-    Route::get('/admin/users', 'AdminController@users');
-    Route::get('/admin/promise', 'AdminController@promise');
+   // Route::get('/admin/users', 'AdminController@users'); //old route
+   // Route::get('/admin/promise', 'AdminController@promise'); old route
 });
 
 /*Route::get('/', function () {

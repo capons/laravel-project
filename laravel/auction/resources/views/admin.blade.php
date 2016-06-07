@@ -22,12 +22,12 @@
 	</script>
 
 	<!--DataTable cdn -->
+	<!--
 	<script src="{!! asset('/AdminLTE/plugins/datatables/jquery.dataTables.min.js') !!}" type="text/javascript"></script>
 	<link href="{!! asset('/AdminLTE/plugins/datatables/jquery.dataTables.min.css') !!}" rel="stylesheet" type="text/css">
 	<script src="https://cdn.datatables.net/buttons/1.2.0/js/dataTables.buttons.min.js" type="text/javascript"></script>
 	<script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js" type="text/javascript"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt-1.10.12/jqc-1.11.3,dt-1.10.12,b-1.2.0,se-1.2.0/datatables.min.css"/>
-	<script type="text/javascript" src="https://cdn.datatables.net/r/dt-1.10.12/jqc-1.11.3,dt-1.10.12,b-1.2.0,se-1.2.0/datatables.min.js"></script>
+	-->
 
 </head>
 <body class="skin-blue sidebar-mini">
@@ -199,7 +199,7 @@
 		<ul class="sidebar-menu">
 			<li class="header">HEADER</li>
 			<!-- Optionally, you can add icons to the links -->
-			<li {{ (Request::is('admin') ? 'class=active' : '') }}><a href="{!! url('/admin') !!}"><i class="fa fa-link"></i><span>Users</span></a></li>
+			<li {{ (Request::is('admin/users') ? 'class=active' : '') }}><a href="{!! url('/admin/users') !!}"><i class="fa fa-link"></i><span>Users</span></a></li>
 			<li {{ (Request::is('admin/pagepromise') ? 'class=active' : '') }}><a href="{!! url('/admin/pagepromise') !!}"><i class="fa fa-link"></i> <span>Promise</span></a></li>
 			<li class="treeview">
 				<a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
