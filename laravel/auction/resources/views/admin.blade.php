@@ -200,6 +200,10 @@
 			<li class="header">HEADER</li>
 			<!-- Optionally, you can add icons to the links -->
 			<li {{ (Request::is('admin/users') ? 'class=active' : '') }}><a href="{!! url('/admin/users') !!}"><i class="fa fa-link"></i><span>Users</span></a></li>
+			<li {{ (Request::is('admin/location') ? 'class=active' : '') }}><a href="{!! url('/admin/location') !!}"><i class="fa fa-link"></i> <span>Location</span></a></li>
+			<li {{ (Request::is('admin/category') ? 'class=active' : '') }}><a href="{!! url('/admin/category') !!}"><i class="fa fa-link"></i> <span>Category</span></a></li>
+
+
 			<li {{ (Request::is('admin/pagepromise') ? 'class=active' : '') }}><a href="{!! url('/admin/pagepromise') !!}"><i class="fa fa-link"></i> <span>Promise</span></a></li>
 			<li class="treeview">
 				<a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>

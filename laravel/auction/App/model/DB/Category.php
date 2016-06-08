@@ -9,7 +9,9 @@ class Category extends Model {
 
 	protected $table = 'category';
 	public $timestamps = false;
-
+	protected $fillable = array('name','parent'); //database table row name
+	
+	/*
 	public static function getSelect(){
 		$instance = new static;
 		$select = '<select id="cat" name="category_id" class="input_form">';
@@ -19,4 +21,5 @@ class Category extends Model {
 		$select .= '</select>';
 		echo $select;
 	}
+	*/
 }

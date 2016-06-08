@@ -38,11 +38,13 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/promise/profile/{id}', 'PromiseController@pageProfile');
     Route::get('/promise/buypromise', 'PromiseController@pageBuypromise');
 
+    //profile route
     Route::get('/account/broughtpromise', 'AccountController@pageBroughtpromise');
     Route::get('/account/otherpromise', 'AccountController@pageOtherpromise');
     Route::get('/account/sellpromise', 'AccountController@pageSellpromise');
     Route::get('/account/yourpromise', 'AccountController@pageYourpromise');
 
+    //promise route
     Route::post('/promise/add', 'PromiseController@add');
     Route::post('/promise/addrequest', 'PromiseController@addRequest');
     Route::post('/promise/getdata', 'PromiseController@getData');
@@ -54,15 +56,26 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/home','UserController@getIndex');
 
     Route::get('/user/getfile','UserController@uploadedFile');
+
+ 
+
 });
 
 Route::group(['middleware' => ['auth']], function() {
     //Route::get('/admin', 'AdminController@users'); //old route
-    /*Users routes*/
+    /*Users route*/
     Route::get('/admin/users','AdminUsersController@users'); //i add
     Route::post('/admin/users','AdminUsersController@modify'); //i add
     Route::get('/admin/users/new','AdminUsersController@newUser');
-    /* ./Users routes*/
+    /* ./Users route*/
+    /* Category route*/
+    Route::get('/admin/category','AdminCategoryController@getCategory');
+    Route::post('/admin/category','AdminCategoryController@modify');
+    /* ./Category route*/
+    /* ./Location*/
+    Route::get('/admin/location','AdminLocationController@getIndex');
+    Route::post('/admin/location','AdminLocationController@modify');
+    /* ./Location*/
     Route::get('/admin/pagepromise', 'AdminController@pagePromise');
 
    // Route::get('/admin/users', 'AdminController@users'); //old route

@@ -22,5 +22,5 @@
 			@endforeach
 		</div>
 	</div>
-	<script type="text/javascript" src="/js/account/yourpromise.js"></script>
+	<script type="text/javascript" src="<?php echo base_path(); ?>/public/js/account/yourpromise.js"></script>
 @stop

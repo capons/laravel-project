@@ -6,5 +6,5 @@
 @stop
 
 @section('content')
-	<script type="text/javascript" src="/js/promise/buypromise.js"></script>
+	<script type="text/javascript" src="<?php echo base_path(); ?>/public/js/promise/buypromise.js"></script>
 @stop
