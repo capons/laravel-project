@@ -15,7 +15,8 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    //'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'mail'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +55,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'Laravel-auction-test@gmail.com', 'name' => null],
 
     /*
     |--------------------------------------------------------------------------
@@ -107,6 +108,7 @@ return [
     */
 
     'sendmail' => '/usr/sbin/sendmail -bs',
+    //'sendmail' => 'C:\xampp\mailtodisk\mailtodisk.exe -bs', //send mail path
 
     /*
     |--------------------------------------------------------------------------

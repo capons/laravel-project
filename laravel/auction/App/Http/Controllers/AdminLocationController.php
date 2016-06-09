@@ -109,7 +109,7 @@ class AdminLocationController extends Controller {
         if ($validator->fails()) { //if true display error
             return redirect('admin/location')//redirect url
             ->withInput()
-                ->withErrors($validator); //set validation error name to display in error layout  views/common/error.blade.php
+                ->withErrors($validator); //set validation error name to display in error layout  views/common/errors.blade.php
         } else {
             $values=array('name'=>$name); //update data
             Location::where('id',$id)->update($values);

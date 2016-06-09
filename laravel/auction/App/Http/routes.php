@@ -24,6 +24,7 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister'); //view auth/register
 Route::post('auth/register', 'Auth\AuthController@postRegister'); //receive data from registration form
+Route::get('auth/active', 'Auth\AuthController@postActivate'); //activate user account
 
 //Route::controller('user', 'UserController');
 //Route::controller('promise', ['middleware' => 'auth', 'uses' => 'PromiseController']);

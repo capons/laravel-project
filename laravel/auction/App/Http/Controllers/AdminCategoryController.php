@@ -108,7 +108,7 @@ class AdminCategoryController extends Controller {
         if ($validator->fails()) { //if true display error
             return redirect('admin/category')//redirect url
             ->withInput()
-                ->withErrors($validator); //set validation error name to display in error layout  views/common/error.blade.php
+                ->withErrors($validator); //set validation error name to display in error layout  views/common/errors.blade.php
         } else {
             $values=array('name'=>$name); //update data
             Category::where('id',$id)->update($values);
@@ -125,7 +125,7 @@ class AdminCategoryController extends Controller {
         if ($validator->fails()) {
             return redirect('admin/category')
                 ->withInput()
-                ->withErrors($validator); //set validation error name to display in error layout  views/common/error.blade.php
+                ->withErrors($validator); //set validation error name to display in error layout  views/common/errors.blade.php
         }
 
         $task = new Category();

@@ -17,13 +17,13 @@
 			<div class="form-group">
 				<label style="text-align: left" class="col-sm-4 control-label">First name</label>
 				<div class="col-sm-8">
-					<input type="text" class="form-control" name="f_name">
+					<input type="text" class="form-control" name="f_name" value="test_name">
 				</div>
 			</div>
 			<div class="form-group">
 				<label style="text-align: left" class="col-sm-4 control-label">Last name</label>
 				<div class="col-sm-8">
-					<input type="text" class="form-control" name="l_name">
+					<input type="text" class="form-control" name="l_name" value="test_Last_name">
 				</div>
 			</div>
 			@if (count($location_input) > 0)  <!-- $location_input -> array with country name -->
@@ -57,10 +57,6 @@
 				</div>
 			</div>
 			<!--category group -->
-			<!--
-			<input type="checkbox" name="category_id" value="0">
-			Category
-			-->
 			@if (count($category_input) > 0)  <!-- $location_input -> array with country name -->
 				<div style="margin-top: 20px" class="row">
 					<div class="col-xs-12">
@@ -74,6 +70,16 @@
 				</div>
 			@endif
 			<!--./category group -->
+			<!-- Terms and condicions checkbox -->
+			<div style="margin-top: 20px" class="row">
+				<div class="col-xs-12">
+					<div class="col-xs-12">
+						<input type="checkbox" name="terms" value="{{$category->id}}">
+						<span>I have and agreed to the </span><a style="text-decoration-line: underline;" href="#">Terms and Conditions</a>
+					</div>
+				</div>
+			</div>
+			<!-- ./Terms and condicions checkbox -->
 			<div class="form-group">
 				<div style="text-align: right" class="col-xs-12">
 					<input class="btn btn-default" type="submit" value="SUBMIT">
@@ -85,17 +91,16 @@
 	</div>
 	<div class="row">
 		<div style="float: none;margin: 0 auto" class="col-xs-6">
-			@if (Session::get('errors'))
-				<div class="alert alert-dismissable alert-warning">
-					<h4>Uwaga!</h4>
-					<ul>
-						@foreach (Session::get('errors')->all() as $error)
-							<li>{!! $error !!}</li>
-						@endforeach
-					</ul>
-				</div>
-			@endif
+			<!-- Display Validation Errors -->
+			@include('common.errors')
 		</div>
 	</div>
+	<!--User information -->
+	@if(Session::has('user-info'))
+		<div class="alert-box success">
+			<h2>{{ Session::get('user-info') }}</h2>
+		</div>
+	@endif
+
 
 @stop

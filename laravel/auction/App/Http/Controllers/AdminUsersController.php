@@ -91,21 +91,26 @@ class AdminUsersController extends Controller
     {
        // $method = $request->method();
         //if($request->isMethod('post')) {
+        /*
             $id = Input::get('m-id'); //user data id
             $name = Input::get('m-name');
             $email = Input::get('m-email');
+        */
             $messages = [ //validation message
                 'required' => 'The :attribute field is required.',
             ];
             $validator = Validator::make($request->all(), [
                 'm-name' => 'required',
-                'm-email' => 'required', $messages
-            ]);
+                'm-email' => 'required'
+            ], $messages);
             if ($validator->fails()) { //if true display error
                 return redirect('admin/users')//redirect url
                 ->withInput()
-                    ->withErrors($validator); //set validation error name to display in error layout  views/common/error.blade.php
+                    ->withErrors($validator); //set validation error name to display in error layout  views/common/errors.blade.php
             } else {
+                $id = Input::get('m-id'); //user data id
+                $name = Input::get('m-name');
+                $email = Input::get('m-email');
                 $values=array('f_name'=>$name,'email'=>$email); //update data
                 User::where('id',$id)->update($values);
                 Session::flash('user-info', 'You have successfully update data'); //send message to user via flash data
@@ -129,7 +134,7 @@ class AdminUsersController extends Controller
             if ($validator->fails()) { //if true display error
                 return redirect('admin/users/new')//redirect url
                 ->withInput()
-                    ->withErrors($validator); //set validation error name to display in error layout  views/common/error.blade.php
+                    ->withErrors($validator); //set validation error name to display in error layout  views/common/errors.blade.php
             } else {
                 $values=array('f_name'=>$name,'email'=>$email); //update data
                 User::where('id',$id)->update($values);

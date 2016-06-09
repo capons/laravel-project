@@ -5,14 +5,14 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-	<link href="{!! asset('/css/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
-	<link href="{!! asset('/AdminLTE/dist/css/AdminLTE.min.css') !!}" rel="stylesheet" type="text/css">
-	<link href="{!! asset('/AdminLTE/dist/css/skins/skin-blue.min.css') !!}" rel="stylesheet" type="text/css">
-	<link href="{!! asset('/css/admin.css') !!}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="{!! asset('/js/WCL/main.js') !!}"></script>
-	<script type="text/javascript" src="{!! asset('/js/WCL/interface.js') !!}"></script>
-	<script type="text/javascript" src="{!! asset('/js/system.js') !!}"></script>
-	<script type="text/javascript" src="{!! asset('/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js') !!}"></script>
+	<link href="{!! asset('public/css/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
+	<link href="{!! asset('public/AdminLTE/dist/css/AdminLTE.min.css') !!}" rel="stylesheet" type="text/css">
+	<link href="{!! asset('public/AdminLTE/dist/css/skins/skin-blue.min.css') !!}" rel="stylesheet" type="text/css">
+	<link href="{!! asset('public/css/admin.css') !!}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="{!! asset('public/js/WCL/main.js') !!}"></script>
+	<script type="text/javascript" src="{!! asset('public/js/WCL/interface.js') !!}"></script>
+	<script type="text/javascript" src="{!! asset('public/js/system.js') !!}"></script>
+	<script type="text/javascript" src="{!! asset('public/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js') !!}"></script>
 	<script type="text/javascript">
 		$.ajaxSetup({
 			headers: {

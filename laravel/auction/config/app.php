@@ -8,7 +8,7 @@ return [
 
     'setting' => [
         'upload' => public_path('upload'),
-        'url_upload' => '/upload'
+        'url_upload' => '/upload' //upload folder
     ],
 
     /*
@@ -35,7 +35,7 @@ return [
     |
     */
 
-    'url' => 'http://localhost/bogdan/LARAVEL-PROJECT/laravel/auction/public',
+    'url' => 'http://localhost/bogdan/LARAVEL-PROJECT/laravel/auction',
 
     /*
     |--------------------------------------------------------------------------
