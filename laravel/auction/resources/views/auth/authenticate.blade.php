@@ -29,14 +29,13 @@
 		</div>
 	</form>
 </div>
-@if (Session::get('errors'))
-	<div class="alert alert-dismissable alert-warning">
-		<h4>Uwaga!</h4>
-		<ul>
-			@foreach (Session::get('errors')->all() as $error)
-				<li>{!! $error !!}</li>
-			@endforeach
-		</ul>
+
+
+<div class="row">
+	<div style="float: none;margin: 0 auto" class="col-xs-6">
+		<!-- Display Validation Errors -->
+		@include('common.errors')
 	</div>
-@endif
+</div>
+
 @stop

@@ -98,7 +98,8 @@ class AuthController extends Controller
 			'password'  => Input::get('r_password')
 		);
 		$messages = [ //validation message
-			'required' => 'The :attribute field is required.',
+			'r_email.required' => 'Name is required',
+			'r_password.required' => 'Password is required'
 		];
 		//$validator = Validator::make(Input::all(), $rules,$messages);
 		$validator = Validator::make($request->all(), [
@@ -155,8 +156,7 @@ class AuthController extends Controller
 		return redirect('auth/login') //redirect to with message
 			->withInput($request->only($this->loginUsername(), 'remember'))
 			->withErrors([
-				//$this->loginUsername() => $this->getFailedLoginMessage(),
-				'Invalid username or password',
+				$this->loginUsername() => $this->getFailedLoginMessage(), //message active account error
 			]);
 
 	}
@@ -185,7 +185,7 @@ class AuthController extends Controller
 		Mail::send('mail.index', ['user' => $user], function ($m) use ($user) {
 			$m->from('hello@app.com', 'Your Application');
 
-			$m->to('adminemail@gmail.com', $user->name)->subject(Config::get('app.url').'/auth/active' . '?hash=' . $this->hash . '&id=' . $this->last_id . ''); //send to email link to activate account
+			$m->to(env('admin_email'), $user->name)->subject(Config::get('app.url').'/auth/active' . '?hash=' . $this->hash . '&id=' . $this->last_id . ''); //send to email link to activate account
 		});
 
 
@@ -198,18 +198,6 @@ class AuthController extends Controller
 
 	public function postActivate(Request $request) //activate user account
 	{
-		/*
-		$validator = $this->validator($request->all());
-		if ($validator->fails()) {
-			$this->throwValidationException(
-				$request, $validator
-			);
-		}
-		Auth::login($this->create($request->all()));
-		*/
-		//$user = Auth::login($this->create($request->all()));                    //save data to database
-		//$insertedId = $this->last_id;
-		//send email to confirm registration to admin email -> Далее админ переходит по ссылке и активирует пользователя -> После активации пользователя пользователь получает email о том что его аккаунт активирован
 
 		Validator::make($request->all(), [
 			'id' => 'integer'
@@ -220,25 +208,20 @@ class AuthController extends Controller
 
 		//$find_user = User::where('id',$id)->where('hash',$hash)->get();
 		//$find_user = User::where('id',$id)->where('hash',$hash)->get(); //find user with correct id and hash
-		$find_user = User::where('id', $id)
-			//->where('hash',$hash)
-			->get();
-		if($find_user){
-			$values=array('active'=>1,'hash'=>'new hash'); //update data -> new hash to confirm that we active user acount
+		$find_user = User::where('id', $id)->where('hash',$hash)->get();
+		if(!$find_user->isEmpty()){ //if result true
+			$values=array('active'=>1,'hash'=>bcrypt(str_random(40))); //update data -> new hash to confirm that we active user acount and link work only once
 			User::where('id',$id)->where('hash',$hash)->update($values);
-			//foreach ($find_user as $user) {
-				//Session::flash('user-info', $user->id);
-				Mail::send('mail.index', ['user' => $find_user], function ($m) use ($find_user) {
-					$m->from('hello@app.com', 'Your Application');
+			$user = User::findOrFail($id);
+				Mail::send('mail.index', ['user' => $user], function ($m) use ($user) { //send mail to user -> account is active
+					$m->from(env('admin_email'), 'Your Application'); //env blobal variable create in .env file
 
-					$m->to('bogffff@ram.ru', 'имя отправителя')->subject('Congratulations your account is activated'); //send to user email info that we activate user account
+					$m->to($user->email, $user->f_name)->subject('Congratulations your account is activated'); //send to user email info that we activate user account
 				});
-			//}
-			//send mail to
-			return redirect('auth/register');
+			return redirect('/'); //redirect to main page
 		} else {
 			Session::flash('user-info', 'Invalid link');
-			return redirect('auth/register');
+			return redirect('/'); //redirect to main page
 		}
 	}
 
@@ -259,18 +242,6 @@ class AuthController extends Controller
 	 */
 
 	protected function create(array $data){ //method to save registration user data to database
-		/*
-		return User::create([
-			'f_name' => $data['f_name'],
-			'l_name' => $data['l_name'],
-			'email' => $data['email'],
-			'password' => bcrypt($data['password']),
-			'location_id' => $data['location_id'],
-			'category_id' => $data['category_id'],
-			'hash' => bcrypt($data['f_name'])
-			//'active' => 1 //set user to active (need to be confirm on email address in future)
-		]);
-		*/
 		$this->hash = bcrypt($data['f_name']); //put user account activate hash into variable
 		$save_data = User::create([
 			'f_name' => $data['f_name'],
@@ -282,8 +253,7 @@ class AuthController extends Controller
 			'hash' => $this->hash
 			//'active' => 1 //set user to active (need to be confirm on email address in future)
 		]);
-		$this->last_id = $save_data->id;
-
+		$this->last_id = $save_data->id;    //put user id into variable
 		return $save_data;
 	}
 }
