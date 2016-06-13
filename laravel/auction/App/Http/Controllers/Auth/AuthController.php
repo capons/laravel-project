@@ -174,17 +174,12 @@ class AuthController extends Controller
 			);
 		}
 		Auth::login($this->create($request->all()));
-		//$user = Auth::login($this->create($request->all()));                    //save data to database
-		//$insertedId = $this->last_id;
-		//send email to confirm registration to admin email -> Далее админ переходит по ссылке и активирует пользователя -> После активации пользователя пользователь получает email о том что его аккаунт активирован
+		//$this->last_id -> return last database insert id
+		$user = User::findOrFail($this->last_id); //user object
 
-		//Вернуть last insert id
-		
-
-		$user = User::findOrFail($this->last_id);
-		Mail::send('mail.index', ['user' => $user], function ($m) use ($user) {
+		$link_to_active = Config::get('app.url').'/auth/active'.'?hash='.$this->hash.'&id='.$this->last_id; //send variable to mail view
+		Mail::send('mail.index', ['link' => $link_to_active], function ($m) use ($user) {
 			$m->from('hello@app.com', 'Your Application');
-
 			$m->to(env('admin_email'), $user->name)->subject(Config::get('app.url').'/auth/active' . '?hash=' . $this->hash . '&id=' . $this->last_id . ''); //send to email link to activate account
 		});
 
@@ -193,7 +188,8 @@ class AuthController extends Controller
 		Session::flash('user-info', 'Your registration has been successfully submitted
 									for approval and you will be notified via email when live.'); //send message to user via flash data
 		//return redirect($this->redirectPath());                         //redirect controller set in protected $redirectTo = '/';
-		return redirect('auth/register');
+		//return redirect('auth/register');
+		return redirect('/');
 	}
 
 	public function postActivate(Request $request) //activate user account
@@ -213,7 +209,7 @@ class AuthController extends Controller
 			$values=array('active'=>1,'hash'=>bcrypt(str_random(40))); //update data -> new hash to confirm that we active user acount and link work only once
 			User::where('id',$id)->where('hash',$hash)->update($values);
 			$user = User::findOrFail($id);
-				Mail::send('mail.index', ['user' => $user], function ($m) use ($user) { //send mail to user -> account is active
+				Mail::send('mail.index', ['view_variable' => 'Your account is active'], function ($m) use ($user) { //send mail to user -> account is active
 					$m->from(env('admin_email'), 'Your Application'); //env blobal variable create in .env file
 
 					$m->to($user->email, $user->f_name)->subject('Congratulations your account is activated'); //send to user email info that we activate user account

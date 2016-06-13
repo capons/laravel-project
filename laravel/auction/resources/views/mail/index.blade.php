@@ -1,16 +1,21 @@
-@extends('main')
-
-@section('title', 'Register')
-
-@section('sidebar')
-
-@stop
-
-@section('content')
+<!DOCTYPE html>
+<html>
+<head>
+   <title>@yield('title')</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
 
 
 
-   <p>Email view</p>
 
+<?php
+if(isset($link)){
+?>
+    <p>{{$link}}</p>
+    <?php
+}
+?>
+</body>
+</html>
 
-@stop
